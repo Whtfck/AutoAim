@@ -106,5 +106,19 @@ namespace AutoAim
 
             return Vector3.zero;
         }
+        
+        [HarmonyPatch(typeof(CharacterMainControl), "GunScatterMultiplier", MethodType.Getter)]
+        public static class GunScatterMultiplierPatch
+        {
+            [HarmonyPostfix]
+            public static void Postfix(CharacterMainControl __instance, ref float __result)
+            {
+                // 如果处于 ADS 状态，将散射乘数减半（可调）
+                if (__instance.IsInAdsInput)
+                {
+                    __result *= 0.1f; // 例如：原为 1.0 → 变为 0.3
+                }
+            }
+        }
     }
 }
